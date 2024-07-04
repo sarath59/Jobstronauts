@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Tailoring | Boost Your Job Applications | Jobstronauts</title>
+    <meta name="description" content="Optimize your resume with AI-powered tailoring. Match job descriptions perfectly, increase interview chances, and land your dream job with Jobstronauts' intelligent resume optimization tool.">
+    <meta name="keywords" content="AI resume tailoring, job application optimization, ATS-friendly resume, career advancement, job search tool, resume optimizer, interview success, Jobstronauts">
+    <meta name="author" content="Jobstronauts">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        header {
+            background: linear-gradient(135deg, #007bff, #00bfff);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+        header .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+            margin-right: auto;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        footer {
+            background: linear-gradient(135deg, #007bff, #00bfff);
+            color: #fff;
+            padding: 15px 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+        footer .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+        .social-links a {
+            color: #fff;
+            font-size: 16px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #f0f0f0;
+        }
+        .container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 100px 20px 80px;
+            overflow-y: auto;
+        }
+        .content-area {
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        .input-section, .output-section {
+            flex: 1;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+        .form-group {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 10px;
+            display: block;
+            font-size: 18px;
+        }
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            height: 200px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #progressContainer {
+            display: none;
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        #progressBar {
+            width: 100%;
+            background-color: #e9ecef;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        #progressBarFill {
+            height: 100%;
+            background-color: #007bff;
+            width: 0;
+            transition: width 0.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        #progressBarFill::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 50px 50px;
+            animation: moveStripes 1s linear infinite;
+        }
+        @keyframes moveStripes {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 50px 50px;
+            }
+        }
+        #progressMessage {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        #statusMessage {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .error {
+            color: #dc3545;
+        }
+        #outputContainer {
+            display: none;
+        }
+        #outputContainer h3 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .coming-soon {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #007bff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin: 50px 0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .form-group input[type="file"] {
+            display: block;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+        }
+        .popup-box {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 400px;
+            max-width: 80%;
+            margin: 100px auto;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .popup-box h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .popup-box p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .popup-box button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .popup-box button:hover {
+            background-color: #0056b3;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #007bff;
+        }
+        #userInfo {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        #userName {
+            color: white;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        #signOutButton {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #signOutButton:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="content">
+            <div class="logo">Jobstronauts</div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+                <a href="#convert-to-pdf">Convert to PDF</a>
+                <a href="#convert-to-docx">Convert to DOCX</a>
+            </nav>
+            <div id="userInfo">
+                <span id="userName"></span>
+                <button id="signOutButton" style="display: none;">Sign Out</button>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="content-area">
+            <div class="input-section">
+                <h1>AI-Powered Resume Tailoring</h1>
+                <p style="text-align: center; margin-bottom: 30px; font-size: 18px;">Boost your job application success with our intelligent resume optimization tool. Match job descriptions perfectly and increase your chances of landing interviews!</p>
+                <form id="resumeForm">
+                    <div class="form-group">
+                        <label for="resumeContent">Your Current Resume:</label>
+                        <textarea id="resumeContent" name="resumeContent" placeholder="Paste your resume content here..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobDescription">Target Job Description:</label>
+                        <textarea id="jobDescription" name="jobDescription" placeholder="Paste the job description here..." required></textarea>
+                    </div>
+                    <button type="submit">Optimize My Resume</button>
+                </form>
+                <div id="statusMessage"></div>
+            </div>
+            <div class="output-section">
+                <div id="outputContainer">
+                    <h3>Your Optimized Resume</h3>
+                    <p>Your tailored resume and job match analysis will appear here shortly.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="progressContainer">
+        <div id="progressBar">
+            <div id="progressBarFill"></div>
+        </div>
+        <div id="progressMessage">AI agent started</div>
+    </div>
+    <footer>
+        <div class="content">
+            <div>&copy; 2024 Jobstronauts. Empowering careers through AI.</div>
+            <div class="social-links">
+                <a href="https://www.facebook.com/Jobstronauts" target="_blank" rel="noopener">Facebook</a>
+                <a href="https://www.twitter.com/Jobstronauts" target="_blank" rel="noopener">Twitter</a>
+                <a href="https://www.linkedin.com/company/Jobstronauts" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <span class="popup-close" id="popupClose">&times;</span>
+            <h2>Don't Miss Out!</h2>
+            <p>If you want high-quality job opportunities every day in your inbox and job strategies, sign up using the link below.</p>
+            <button id="subscribeButton">Sign Up</button>
+        </div>
+    </div>
+
+    <script>
+        // Check user authentication status on page load
+        fetch('/user_info')
+            .then(response => response.json())
+            .then(data => {
+                if (data.name) {
+                    document.getElementById('userName').textContent = `Welcome, ${data.name}`;
+                    document.getElementById('signOutButton').style.display = 'inline-block';
+                } else {
+                    window.location.href = 'signin.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.href = 'signin.html';
+            });
+
+        // Sign out functionality
+        document.getElementById('signOutButton').addEventListener('click', function() {
+            fetch('/signout', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Logged out successfully") {
+                        window.location.href = 'signin.html';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Show the pop-up after 5 seconds
+        setTimeout(function() {
+            document.getElementById('popupOverlay').style.display = 'block';
+        }, 5000);
+
+        // Close the pop-up
+        document.getElementById('popupClose').addEventListener('click', function() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        });
+
+        // Redirect to the subscription link
+        document.getElementById('subscribeButton').addEventListener('click', function() {
+            window.location.href = 'https://jobstronauts.beehiiv.com/subscribe';
+        });
+
+        document.getElementById('resumeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const resumeContent = document.getElementById('resumeContent').value;
+            const jobDescription = document.getElementById('jobDescription').value;
+            
+            if (!resumeContent || !jobDescription) {
+                updateStatus('Please fill in all fields.', true);
+                return;
+            }
+            
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('outputContainer').style.display = 'block';
+            updateStatus('Optimizing your resume...');
+            updateProgress(10, 'AI agent started');
+            
+            fetch('/process_resume', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    resume_content: resumeContent,
+                    job_description: jobDescription
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                
+                function readStream() {
+                    return reader.read().then(({ done, value }) => {
+                        if (done) {
+                            return;
+                        }
+                        const chunk = decoder.decode(value, { stream: true });
+                        const lines = chunk.split('\n\n');
+                        lines.forEach(line => {
+                            if (line.startsWith('data: ')) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    handleServerSentEvent(data);
+                                } catch (error) {
+                                    console.error('Error parsing SSE data:', error);
+                                    updateStatus(`Error parsing server data: ${error.message}`, true);
+                                }
+                            }
+                        });
+                        return readStream();
+                    });
+                }
+                
+                return readStream();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (error.error === "User is not authenticated. Please log in again.") {
+                    alert("Your session has expired. Please log in again.");
+                    window.location.href = '/signin';
+                } else {
+                    updateStatus(`Error: ${error.message || 'An unexpected error occurred.'}`, true);
+                }
+                updateProgress(0, 'An error occurred');
+            });
+        });
+    
+        function handleServerSentEvent(data) {
+            switch(data.status) {
+                case 'Update':
+                    updateStatus(data.message);
+                    updateDynamicContent(data.type, data.data);
+                    switch(data.type) {
+                        case 'jobRequirements':
+                            updateProgress(20, 'AI agent is fetching the job description');
+                            break;
+                        case 'keywords':
+                            updateProgress(40, 'AI agent is preparing the keywords and content');
+                            break;
+                        case 'contentUpdate':
+                            updateProgress(60, 'AI agent is updating the content');
+                            break;
+                        case 'atsOptimization':
+                            updateProgress(80, 'AI agent is applying ATS-friendly content to the resume');
+                            break;
+                    }
+                    break;
+                case 'Complete':
+                    updateStatus(data.message);
+                    updateProgress(100, 'Updated resume is ready with ATS-friendly content and keywords');
+                    setTimeout(() => {
+                        document.getElementById('progressContainer').style.display = 'none';
+                    }, 2000); // Hide progress bar after 2 seconds
+                    break;
+                case 'Error':
+                    updateStatus(data.message, true);
+                    updateProgress(0, 'An error occurred');
+                    break;
+                default:
+                    console.warn('Unknown server event status:', data.status);
+            }
+        }
+    
+        function updateStatus(message, isError = false) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = isError ? 'error' : '';
+        }
+
+        function updateProgress(percentage, message) {
+            document.getElementById('progressBarFill').style.width = `${percentage}%`;
+            document.getElementById('progressMessage').textContent = message;
+        }
+    
+        function updateDynamicContent(type, data) {
+            const outputContainer = document.getElementById('outputContainer');
+            outputContainer.innerHTML = `<h3>${type === 'jobRequirements' ? 'Job Requirements Analysis' : 'Your Optimized Resume'}</h3>${formatObjectToHtml(data)}`;
+        }
+    
+        function formatObjectToHtml(obj) {
+            if (obj === null || obj === undefined) {
+                return 'No data available';
+            }
+            if (Array.isArray(obj)) {
+                return '<ul>' + obj.map(item => `<li>${item}</li>`).join('') + '</ul>';
+            } else if (typeof obj === 'object') {
+                let html = '<ul>';
+                for (const [key, value] of Object.entries(obj)) {
+                    html += `<li><strong>${key}:</strong> ${formatObjectToHtml(value)}</li>`;
+                }
+                html += '</ul>';
+                return html;
+            } else {
+                return String(obj);
+            }
+        }
+
+        // Handle navigation
+        document.querySelector('nav').addEventListener('click', function(event) {
+            if (event.target.tagName === 'A') {
+                event.preventDefault();
+                const page = event.target.getAttribute('href').slice(1);
+                if (page === 'blog') {
+                    document.querySelector('.content-area').innerHTML = '<div class="coming-soon">Blog Coming Soon</div>';
+                } else if (page === 'contact') {
+                    document.querySelector('.content-area').innerHTML = '<h2 style="text-align: center; margin-top: 50px;">Contact Us</h2><p style="text-align: center; font-size: 18px; margin-top: 20px;">For any queries, please email: <a href="mailto:saratchandrakavuru@jobstronauts.com">saratchandrakavuru@jobstronauts.com</a></p>';
+                } else if (page === 'convert-to-pdf') {
+                    document.querySelector('.content-area').innerHTML = `
+                        <div class="input-section">
+                            <h1>Convert DOCX to PDF</h1>
+                            <form id="convertToPdfForm">
+                                <div class="form-group">
+                                    <label for="pdfFile">Upload DOCX File:</label>
+                                    <input type="file" id="pdfFile" name="file" accept=".docx" required>
+                                </div>
+                                <button type="submit">Convert to PDF</button>
+                            </form>
+                            <div id="pdfStatusMessage"></div>
+                        </div>
+                    `;
+                    document.getElementById('convertToPdfForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const fileInput = document.getElementById('pdfFile');
+                        const formData = new FormData();
+                        formData.append('file', fileInput.files[0]);
+                        fetch('/convert_to_pdf', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'converted.pdf';
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                        })
+                        .catch(error => {
+                            document.getElementById('pdfStatusMessage').textContent = `Error: ${error.message}`;
+                            document.getElementById('pdfStatusMessage').className = 'error';
+                        });
+                    });
+                } else if (page === 'convert-to-docx') {
+                    document.querySelector('.content-area').innerHTML = `
+                        <div class="input-section">
+                            <h1>Convert PDF to DOCX</h1>
+                            <form id="convertToDocxForm">
+                                <div class="form-group">
+                                    <label for="docxFile">Upload PDF File:</label>
+                                    <input type="file" id="docxFile" name="file" accept=".pdf" required>
+                                </div>
+                                <button type="submit">Convert to DOCX</button>
+                            </form>
+                            <div id="docxStatusMessage"></div>
+                        </div>
+                    `;
+                    document.getElementById('convertToDocxForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        const fileInput = document.getElementById('docxFile');
+                        const formData = new FormData();
+                        formData.append('file', fileInput.files[0]);
+                        fetch('/convert_to_docx', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.blob();
+                        })
+                        .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'converted.docx';
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                        })
+                        .catch(error => {
+                            document.getElementById('docxStatusMessage').textContent = `Error: ${error.message}`;
+                            document.getElementById('docxStatusMessage').className = 'error';
+                        });
+                    });
+                } else {
+                    location.reload();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
